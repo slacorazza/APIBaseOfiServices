@@ -1,12 +1,11 @@
 
-
-from django.shortcuts import render
 from rest_framework import generics
-from rest_framework.response import Response
 from rest_framework.views import APIView
 from .models import Case, Activity
 from .serializers import CaseSerializer, ActivitySerializer
 from rest_framework.pagination import PageNumberPagination
+from rest_framework.pagination import PageNumberPagination
+
 
 class CaseListCreate(generics.ListCreateAPIView):
     queryset = Case.objects.all()
@@ -23,8 +22,9 @@ class CaseRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
 
 class ActivityRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
     queryset = Activity.objects.all()
+    serializer_class = ActivitySerializer
+    lookup_field = 'id'
 
-from rest_framework.pagination import PageNumberPagination
 
 class ActivityList(APIView):
     def get(self, request, format=None):
