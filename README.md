@@ -1,6 +1,6 @@
-# OFI Services Process Mining API
+# OFI Services API
 
-This is a Django REST application that provides API endpoints to a front-end dashboard for process mining for the company OFI Services. The API is hosted at [https://ofiservices.pythonanywhere.com/api/](https://ofiservices.pythonanywhere.com/api/).
+This is a Django REST application that provides API endpoints to a front-end dashboard for the company OFI Services.
 
 ## Table of Contents
 
@@ -16,14 +16,13 @@ This is a Django REST application that provides API endpoints to a front-end das
 
 ## Introduction
 
-OFI Services Process Mining API allows you to interact with the company's process data through a RESTful interface. This API is designed to support the front-end dashboard, enabling users to visualize and analyze business processes.
+OFI Services API allows you to interact with the company's data through a RESTful interface. This API is designed to support the front-end dashboard, enabling users to visualize and analyze the data.
 
 ## Features
 
 - Retrieve process data
 - Filter and search process instances
 - Create, update, and delete process-related data
-- Authentication and authorization
 
 ## Installation
 
@@ -31,7 +30,7 @@ To get started with the API, follow these steps:
 
 1. Clone the repository:
     ```bash
-    git clone https://github.com/yourusername/ofi-services-api.git
+    git clone https://github.com/slacorazza/APIBaseOfiServices.git
     cd ofi-services-api
     ```
 
@@ -58,13 +57,11 @@ To get started with the API, follow these steps:
 
 ## Usage
 
-Access the API at `http://127.0.0.1:8000/api/` (for local development) or [https://ofiservices.pythonanywhere.com/api/](https://ofiservices.pythonanywhere.com/api/).
+Access the API at `http://127.0.0.1:8000/api/` (for local development) 
 
 Use a tool like Postman or cURL to interact with the API endpoints.
 
 ## API Endpoints
-
-### Process Data
 
 - `GET /api/processes/` - Retrieve a list of processes
 - `GET /api/processes/{id}/` - Retrieve a specific process by ID
