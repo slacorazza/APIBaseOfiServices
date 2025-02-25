@@ -33,6 +33,7 @@ class signup(ApiView):
                 serializer.save()
                 user = User.objects.get(username=request.data['username'])
                 user.set_password(request.data['password'])
+
                 user.save()
                 token = Token.objects.create(user=user)
                 return Response({"token": token.key}, status=status.HTTP_201_CREATED)
@@ -42,12 +43,19 @@ class signup(ApiView):
             return Response({"error": "Internal Server Error"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 class logout(ApiView):
-    def get(self, request):
-        return Response({"message": "Logout"})
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+    def post(self, request):
+        try:
+            request.user.auth_token.delete()
+            return Response({"message": "Successfully logged out."}, status=status.HTTP_200_OK)
+        except Exception as e:
+            print(f"Error during logout: {e}")
+            return Response({"error": "Internal Server Error"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
     
 class validate_token(ApiView):
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
     def get(self, request):
         user = request.user
-        return Response({"message": "Token is valid for: " + user.email})
+        return Response({"message": "Token is valid for: " + user.username}, status=status.HTTP_200_OK)
