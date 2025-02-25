@@ -12,7 +12,15 @@ class login(ApiView):
     
 class signup(ApiView):
     def get(self, request):
-        return Response({"message": "Signup"})
+        serializer = UserSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            user = User.objects.get(username=request.data['username'])
+            user.set_password(request.data['password'])
+            user.save()
+            token = Token.objects.create(user=user)
+            return Response({"token": token.key}, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class logout(ApiView):
     def get(self, request):
