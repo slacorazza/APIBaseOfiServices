@@ -6,7 +6,9 @@ from django.contrib.auth.models import User
 from rest_framework import status
 from rest_framework.authtoken.models import Token
 from django.shortcuts import get_object_or_404
-
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.authentication import TokenAuthentication
+from rest_framework.authentication import SessionAuthentication
 
 class login(ApiView):
     def post(self, request):
@@ -42,3 +44,10 @@ class signup(ApiView):
 class logout(ApiView):
     def get(self, request):
         return Response({"message": "Logout"})
+    
+class validate_token(ApiView):
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+    def get(self, request):
+        user = request.user
+        return Response({"message": "Token is valid for: " + user.email})
