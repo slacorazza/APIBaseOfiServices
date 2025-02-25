@@ -11,6 +11,12 @@ from rest_framework.authentication import TokenAuthentication
 from rest_framework.authentication import SessionAuthentication
 
 class login(ApiView):
+    """
+    View to log in a user.
+
+    Methods:
+    - POST: Authenticates a user and returns an authentication token.
+    """
     def post(self, request):
         try:
             user = get_object_or_404(User, username=request.data['username'])
@@ -18,14 +24,20 @@ class login(ApiView):
                 return Response({"detail": 'Not found'}, status=status.HTTP_404_NOT_FOUND)
             
             token, created = Token.objects.get_or_create(user=user)
-            serializer = UserSerializer(instance = user)
+            serializer = UserSerializer(instance=user)
             return Response({"token": token.key}, status=status.HTTP_202_ACCEPTED)
         except Exception as e:
             print(f"Error during login: {e}")
             return Response({"error": "Internal Server Error"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         return Response({"message": "Login"})
-    
+
 class signup(ApiView):
+    """
+    View to register a new user.
+
+    Methods:
+    - POST: Creates a new user and returns an authentication token.
+    """
     def post(self, request):
         try:
             serializer = UserSerializer(data=request.data)
@@ -33,7 +45,6 @@ class signup(ApiView):
                 serializer.save()
                 user = User.objects.get(username=request.data['username'])
                 user.set_password(request.data['password'])
-
                 user.save()
                 token = Token.objects.create(user=user)
                 return Response({"token": token.key}, status=status.HTTP_201_CREATED)
@@ -43,8 +54,15 @@ class signup(ApiView):
             return Response({"error": "Internal Server Error"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 class logout(ApiView):
+    """
+    View to log out a user.
+
+    Methods:
+    - POST: Deletes the user's authentication token, effectively logging them out.
+    """
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
+
     def post(self, request):
         try:
             request.user.auth_token.delete()
@@ -52,10 +70,17 @@ class logout(ApiView):
         except Exception as e:
             print(f"Error during logout: {e}")
             return Response({"error": "Internal Server Error"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-    
+
 class validate_token(ApiView):
+    """
+    View to validate an authentication token.
+
+    Methods:
+    - GET: Validates the provided authentication token and returns the associated user's username.
+    """
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
+
     def get(self, request):
         user = request.user
         return Response({"message": "Token is valid for: " + user.username}, status=status.HTTP_200_OK)
